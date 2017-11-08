@@ -15,6 +15,7 @@ function scroll(e){
     }else{
         MapConfig.level--;
     }
+    myctx.clearRect(0, 0, 5000, 2000);//每次都把画布清理一下才不会造成内存增长
     caculate(MapConfig.level);
 }
 var MapConfig={
