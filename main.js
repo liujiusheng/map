@@ -32,7 +32,6 @@ function mousedown(e){
 
 function mouseup(e){
     if(mouseDown){
-        //这个地方处理还有问题，10000只是瞎猜的
         var meter = MapConfig.Resolution[MapConfig.level];
         MapConfig.center.x += (e.x-mouseXY.x)*meter;
         MapConfig.center.y -= (e.y-mouseXY.y)*meter;
