@@ -120,25 +120,27 @@ var MapConfig={
                 
                 for(var i=0;i<xClipNum;i++){
                     for(var j=0;j<yClipNum;j++){
-                        var beauty = new Image();
-                        beauty.src = "http://t3.tianditu.com/DataServer?T=vec_w&x="+(leftTopTitleCol+j)+"&y="+(leftTopTitleRow+i)+"&l="+level;
-                        beauty.onload = loadimg(i,j,beauty);
+                        loadImg(i,j,level,leftTopTitleCol,leftTopTitleRow);
                     }
                 }
             }
-            
-            //图片加载完全后绘制
-            function loadimg(i,j,beauty){
-                var TitleImg={
-                    img:null,
-                    x:0,
-                    y:0
+
+            //外部函数
+            function loadImg(i,j,level,leftTopTitleCol,leftTopTitleRow){
+                var beauty = new Image();
+                beauty.onload = function(event){
+                    var TitleImg={
+                        img:null,
+                        x:0,
+                        y:0
+                    };
+                    TitleImg.img=beauty;
+                    TitleImg.x=(j*MapConfig.TitlePix);//offSetX+
+                    TitleImg.y=(i*MapConfig.TitlePix);//offSetY+
+                    TitlesArry.push(TitleImg);
+                    myctx.drawImage(TitleImg.img, TitleImg.x, TitleImg.y);
                 };
-                TitleImg.img=beauty;
-                TitleImg.x=(j*MapConfig.TitlePix);//offSetX+
-                TitleImg.y=(i*MapConfig.TitlePix);//offSetY+
-                TitlesArry.push(TitleImg);
-                myctx.drawImage(TitleImg.img, TitleImg.x, TitleImg.y);
+                beauty.src = "http://t3.tianditu.com/DataServer?T=vec_w&x="+(leftTopTitleCol+j)+"&y="+(leftTopTitleRow+i)+"&l="+level;
             }
 
 
