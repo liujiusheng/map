@@ -6,7 +6,7 @@ import MapConfig from './config.js';
 var mapcv = document.getElementById("mapcv");
 var myctx = mapcv.getContext("2d");
 var TitlesArry=[];
-var mouseXY = [];
+var mouseXY = {x:0,y:0};
 var mouseDown = false;
 mapcv.addEventListener('mousewheel',scroll,false);
 mapcv.addEventListener('mousedown',mousedown,false);
@@ -27,16 +27,22 @@ function scroll(e){
 
 function mousedown(e){
     mouseDown = true;
-    mouseXY = [e.x,e.y];
+    mouseXY = {x:e.x,y:e.y};
 }
 
 function mouseup(e){
+    if(mouseDown){
+        MapConfig.center.x += 10000*(e.x-mouseXY.x);
+        MapConfig.center.y -= 10000*(e.y-mouseXY.y);
+        caculate(MapConfig.level);
+    }
     mouseDown = false;
+    
 }
 
 function mousemove(e){
     if(mouseDown){
-        console.log(e.x,e.y);
+        //console.log(e.x,e.y);
     }
 }
 
@@ -57,6 +63,7 @@ function caculate(level){
     //左上角开始的行列号
     var leftTopTitleRow = Math.floor(Math.abs(maxY-MapConfig.FullExtent.ymax)/MapConfig.Resolution[level]/MapConfig.TitlePix);
     var leftTopTitleCol = Math.floor(Math.abs(minX-MapConfig.FullExtent.xmin)/MapConfig.Resolution[level]/MapConfig.TitlePix);
+    console.log(leftTopTitleCol,leftTopTitleRow);
     //实际地理范围
     var realMinX = MapConfig.FullExtent.xmin+leftTopTitleCol*MapConfig.TitlePix*MapConfig.Resolution[level];
     var realMaxY = MapConfig.FullExtent.ymax-leftTopTitleRow*MapConfig.TitlePix*MapConfig.Resolution[level];
@@ -70,6 +77,7 @@ function caculate(level){
     //右下角行列号
     var rightBottomTitleRow = leftTopTitleRow+xClipNum-1;
     var rightBottomTitleCol = leftTopTitleCol+yClipNum-1;
+    //实际地理范围
     var realMaxX = MapConfig.FullExtent.xmin+(rightBottomTitleCol+1)*MapConfig.TitlePix*MapConfig.Resolution[level];
     var realMinY = MapConfig.FullExtent.ymax-(rightBottomTitleRow+1)*MapConfig.TitlePix*MapConfig.Resolution[level];
     
