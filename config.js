@@ -7,7 +7,7 @@
 
 export default {
     RootDir:'MapTitles/',
-    ViewHeight:700,
+    ViewHeight:600,
     ViewWidth:1000,
     TitlePix:256,
     level:4,

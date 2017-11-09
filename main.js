@@ -32,12 +32,13 @@ function mousedown(e){
 
 function mouseup(e){
     if(mouseDown){
-        MapConfig.center.x += 10000*(e.x-mouseXY.x);
-        MapConfig.center.y -= 10000*(e.y-mouseXY.y);
+        //这个地方处理还有问题，10000只是瞎猜的
+        var meter = MapConfig.Resolution[MapConfig.level];
+        MapConfig.center.x += (e.x-mouseXY.x)*meter;
+        MapConfig.center.y -= (e.y-mouseXY.y)*meter;
         caculate(MapConfig.level);
     }
     mouseDown = false;
-    
 }
 
 function mousemove(e){
