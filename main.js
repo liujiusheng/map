@@ -40,7 +40,7 @@ function render3d(gl){
     drawRect(programInfo,vertices);
 }
 
-
+var run = true;
 //绘制矩形
 function drawRect(programInfo,vertices){
     var buffer = gl.createBuffer();
@@ -78,27 +78,66 @@ function drawRect(programInfo,vertices){
     
     gl.uniformMatrix4fv(programInfo.uniformLocations.projectionMatrix, false, projectionMatrix);
     gl.uniformMatrix4fv(programInfo.uniformLocations.modelViewMatrix, false, modelViewMatrix);
-    //gl.drawArrays(gl.POINTS, 0, 1);
+    //gl.drawArrays(gl.TRIANGLES, 0, 4);
     animate();
 
 }
 
 
 function animate() {
-    requestAnimationFrame(animate);
-    drawScene();
+        requestAnimationFrame(animate);
+        drawScene();
 }
   
 
 //var newVertices = []; 
-var index = 0;
+var index = 0;//在每一段里面的索引
+var split = 0;//源矩阵的分段起点
+var currentVertices = [];
 //生成点
 function buildPoint(){
-    if(index<200){
-        var currentVertices = [-1+0.01*index,-1+0.01*index,0.0];//console.log(newVertices);
+    if(split==undefined){
+        return;
+    }
+    var splitlength = vertices/3;
+    if(currentVertices.length==0){
+        currentVertices = [vertices[split*3],vertices[split*3+1],vertices[split*3+2]];
+    }
+    var currentPoint = [vertices[split*3],vertices[split*3+1],vertices[split*3+2]];
+    var nextPoint = [vertices[(split+1)*3],vertices[(split+1)*3+1],vertices[(split+1)*3+2]];
+    var indexCount = Math.floor(Math.sqrt(Math.pow((nextPoint[0]-currentPoint[0]),2)+Math.pow((nextPoint[1]-currentPoint[1]),2))/0.01);
+
+    //x平移
+    if(nextPoint[0]>currentPoint[0]){
+        var xoffset = 0.01;
+    }else if(nextPoint[0]==currentPoint[0]){
+        var xoffset = 0;
+    }else{
+        var xoffset = -0.01;
+    }
+
+    //y平移
+    if(nextPoint[1]>currentPoint[1]){
+        var yoffset = 0.01;
+    }else if(nextPoint[1]==currentPoint[1]){
+        var yoffset = 0;
+    }else{
+        var yoffset = -0.01;
+    }
+
+    //构造新的数组
+    if(index<indexCount){
+        var x = currentVertices[0]+xoffset;
+        var y = currentVertices[1]+yoffset;
+        currentVertices = [x,y,0.0];
         index += 1;
     }else{
+        split += 1;
         index = 0;
+        if(split>vertices.length/3-1){
+            split = 0;
+            currentVertices = [];
+        }
     }
     return currentVertices;
 }
